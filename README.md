@@ -1,13 +1,3 @@
-…or create a new repository on the command line
-
-echo "# tchatfront" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/maharyfenitra/tchatfront.git
-git push -u origin main
-
 <h1>Tchatfront</h1>
 <hr>
 <h2>Déscription</h2>

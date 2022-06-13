@@ -85,7 +85,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const mdTheme = createTheme();
 
 function DashboardContent() {
-const { users} = useContext(AppContext);
+  const { users,setUsers} = useContext(AppContext);
+  
   const [message,setMessage] = useState("")
   const [discussions, setDiscutions] =useState([])
   const [searchParams, setSearchParams] = useSearchParams();
@@ -132,10 +133,10 @@ const { users} = useContext(AppContext);
                         
         })
   }
-
+/*
   setInterval(()=>{
      setFu(fu+1)
-  }, 1000);
+  }, 1000);*/
   const handleTextChange = (e)=>{
         setMessage(e.target.value)
         console.log("change")
@@ -152,6 +153,7 @@ const { users} = useContext(AppContext);
   }
     
     let il = <></>
+    
     if(users!=null){
       il = users.users.map((u)=>
         <ListItemButton key={u._id}>
@@ -164,7 +166,8 @@ const { users} = useContext(AppContext);
         </ListItemButton>
       )
     }
-    const [login,setLogin] = useState(true);
+
+  const [login,setLogin] = useState(true);
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -172,7 +175,7 @@ const { users} = useContext(AppContext);
   if(login){
   return (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex'}}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
           <Toolbar
@@ -227,6 +230,7 @@ const { users} = useContext(AppContext);
             {il}
           </List>
         </Drawer>
+        {/*** **/}
         <Box
           component="main"
           sx={{
