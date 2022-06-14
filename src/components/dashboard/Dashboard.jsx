@@ -84,7 +84,7 @@ function DashboardContent() {
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
-          <Link href="/Room" variant="body2">
+          <Link href={"Room?id="+u._id} variant="body2">
           <ListItemText primary={u.name} />
           </Link>
         </ListItemButton>

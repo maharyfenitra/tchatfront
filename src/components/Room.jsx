@@ -99,8 +99,8 @@ function DashboardContent() {
     })
   },[fu])
   let ldc = <></>;
-  const handleClickItem = (e,value)=>{
-                alert(value)
+  const handleClickItem = (e)=>{
+                axios.post(url+"messages/deleteMessage",{message_id:e})
             }
   if(discussions!=null){
         ldc=discussions.map((d)=>{
@@ -127,7 +127,7 @@ function DashboardContent() {
                                     variant="body2"
                                     color="text.primary"
                                 >
-                                    <ListItemButton value={d._id} onClick={handleClickItem}>Expéditaire: {sender_name}<RemoveTwoToneIcon/></ListItemButton>
+                                    <ListItemButton value={d._id} onClick={()=>{handleClickItem(d._id)}}>Expéditaire: {sender_name}<RemoveTwoToneIcon/></ListItemButton>
                                     
                                 </Typography>
                                 </React.Fragment>
