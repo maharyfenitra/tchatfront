@@ -34,7 +34,7 @@ import axios from "axios"
 import {url} from "../utils"
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-
+import RemoveTwoToneIcon from '@mui/icons-material/RemoveTwoTone';
 
 const drawerWidth = 240;
 
@@ -85,7 +85,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const mdTheme = createTheme();
 
 function DashboardContent() {
-  const { users,setUsers} = useContext(AppContext);
+  const { users} = useContext(AppContext);
   
   const [message,setMessage] = useState("")
   const [discussions, setDiscutions] =useState([])
@@ -93,25 +93,32 @@ function DashboardContent() {
   const recipient_id =searchParams.get("id")
   const [fu,setFu] = useState(0);
   React.useEffect(()=>{
-    axios.post(url+"messages/getMessages").then((res)=>{
-        
+    axios.post(url+"messages/getMessages",{_id_1:recipient_id,_id_2:sessionStorage.getItem("current_user_id")}).then((res)=>{ 
         setDiscutions(res.data.messages);
         //console.log(discussions);
     })
   },[fu])
   let ldc = <></>;
-  
+  const handleClickItem = (e,value)=>{
+                alert(value)
+            }
   if(discussions!=null){
         ldc=discussions.map((d)=>{
+            let sender_name="Inconnue";
 
+            if(users!=null&&users.users!=null){
+                const suser = users.users.filter((u)=>{
+                return u._id===d.sender_id
+                })
+                sender_name = suser[0].name;
+            }
             
-
             return <div key={d._id}><ListItem alignItems="flex-start">
                             <ListItemAvatar>
-                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                            <Avatar alt={sender_name} src="/static/images/avatar/1.jpg" />
                             </ListItemAvatar>
                             <ListItemText
-                            primary={d.content}
+                            primary={<React.Fragment>{d.content} </React.Fragment>}
                             secondary={
                                 <React.Fragment>
                                 <Typography
@@ -120,12 +127,13 @@ function DashboardContent() {
                                     variant="body2"
                                     color="text.primary"
                                 >
-                                    Expéditaire: {d.sender_id}
+                                    <ListItemButton value={d._id} onClick={handleClickItem}>Expéditaire: {sender_name}<RemoveTwoToneIcon/></ListItemButton>
+                                    
                                 </Typography>
-                                
                                 </React.Fragment>
                             }
                             />
+                            
                         </ListItem>
                         <Divider variant="inset" component="li" />
                         </div>
@@ -133,10 +141,10 @@ function DashboardContent() {
                         
         })
   }
-/*
+
   setInterval(()=>{
      setFu(fu+1)
-  }, 1000);*/
+  }, 1000);
   const handleTextChange = (e)=>{
         setMessage(e.target.value)
         console.log("change")
@@ -251,7 +259,7 @@ function DashboardContent() {
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                        
-
+                        
                         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                         {ldc}
                         <Divider variant="inset" component="li" />
@@ -263,6 +271,7 @@ function DashboardContent() {
                             <ListItemText primary="Envoyer" onClick={handleClickSend}/>
                         </ListItemButton>
                         </List>
+                        
                 </Paper>
               </Grid>
             </Grid>
