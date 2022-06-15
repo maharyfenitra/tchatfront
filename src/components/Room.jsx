@@ -1,5 +1,3 @@
-import Dashboard from "./dashboard/Dashboard";
-
 import * as React from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -22,11 +20,9 @@ import { useState } from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import PeopleIcon from '@mui/icons-material/People';
 import SendIcon from '@mui/icons-material/Send';
 import { AppContext } from '../App';
 import { useContext} from 'react';
-import Link from '@mui/material/Link';
 import { useSearchParams } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import ListItem from '@mui/material/ListItem';
@@ -35,6 +31,10 @@ import {url} from "../utils"
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import RemoveTwoToneIcon from '@mui/icons-material/RemoveTwoTone';
+import Button from '@mui/material/Button';
+import FiberNewIcon from '@mui/icons-material/FiberNew';
+import FaceIcon from '@mui/icons-material/Face';
+import Input from '@mui/material/Input';
 
 const drawerWidth = 240;
 
@@ -87,7 +87,9 @@ const mdTheme = createTheme();
 function DashboardContent() {
   const { users} = useContext(AppContext);
   
-  const [message,setMessage] = useState("")
+  const [message,setMessage] = useState("");
+  const [isNewRoomFormActive,setIsNewRoomFormActive] = useState(true)
+  const [newRoomName,setNewRoomName] = useState("")
   const [discussions, setDiscutions] =useState([])
   const [searchParams, setSearchParams] = useSearchParams();
   const recipient_id =searchParams.get("id")
@@ -159,20 +161,44 @@ function DashboardContent() {
             console.log(error)
         })
   }
-    
-    let il = <></>
-    
+    let il = <></>  
     if(users!=null){
       il = users.users.map((u)=>
         <ListItemButton key={u._id}>
           <ListItemIcon>
-            <PeopleIcon />
+            <FaceIcon />
           </ListItemIcon>
-          <Link href={"Room?id="+u._id} variant="body2">
-          <ListItemText primary={u.name} />
-          </Link>
+          <Button  size="small" href={"Room?id="+u._id} >{u.name}</Button> 
         </ListItemButton>
       )
+      const handleNewRoom = async ()=>{
+          if(isNewRoomFormActive){
+            
+            if(newRoomName!==""){
+              await axios.post(url+"rooms/newRoom",{name:newRoomName})
+              setIsNewRoomFormActive(!isNewRoomFormActive);
+              
+            }else{
+              alert("Vous devez donner un nom à votre nouveau Room")
+            }
+            
+            
+          }else{
+            setIsNewRoomFormActive(!isNewRoomFormActive);
+          }
+          
+          //alert(isNewRoomFormActive)
+      }
+      il.push(<><ListItemButton key="XEY">
+          <ListItemIcon>
+            <FiberNewIcon />
+          </ListItemIcon>
+          <Button variant="outlined" size="small" onClick={handleNewRoom}>{!isNewRoomFormActive?"Nouveau Room":"Enregistrer"}</Button>
+        </ListItemButton>{isNewRoomFormActive&&
+        <ListItemButton key="list_item_room_input">
+          <Input placeholder="Nom du nouveau Room" inputProps={{ 'aria-label': 'description' }} onChange={(e)=>{setNewRoomName(e.target.value)}}/>
+        </ListItemButton>
+        }</>)
     }
 
   const [login,setLogin] = useState(true);
@@ -210,14 +236,12 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+            {sessionStorage.getItem("current_user_name")}
             </Typography>
             <IconButton color="inherit" onClick={()=>{setLogin(false)}}>
                 <LogoutIcon />
-                  Déconnecter
-                
-            </IconButton>
-                
+                  Déconnecter    
+            </IconButton>    
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>

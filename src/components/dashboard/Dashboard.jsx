@@ -125,7 +125,7 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              {sessionStorage.getItem("current_user_name")}
             </Typography>
             <IconButton color="inherit" onClick={()=>{setLogin(false)}}>
                 <LogoutIcon />

@@ -29,6 +29,7 @@ export default function SignIn() {
     }).then((res)=>{
         setLogin(true)
         sessionStorage.setItem("current_user_id", res.data.user[0]._id);
+        sessionStorage.setItem("current_user_name", res.data.user[0].name);
         sessionStorage.setItem("token", res.data.token);
         console.log(res)
     }).catch((errer)=>{
